@@ -1,0 +1,33 @@
+services:
+  dnscat-server:
+    platform: linux/amd64
+    build:
+      context: ../../server
+    environment:
+      - DNSCAT_SECRET=dnscat2 
+      - DNS_OPTS=host=0.0.0.0,port=53
+
+    networks:
+      test-network:
+        ipv4_address: 10.254.0.2
+
+
+  dnscat-client:
+    build:
+      context: ../../client
+    environment:
+      - DNSCAT_SECRET=dnscat2 
+      - DNSCAT_SERVER=10.254.0.2
+
+    networks:
+      test-network:
+        ipv4_address: 10.254.0.3
+
+
+networks:
+  test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.254.0.0/24
+
