@@ -159,6 +159,17 @@ void packet_syn_set_is_command(packet_t *packet)
   packet->body.syn.options |= OPT_COMMAND;
 }
 
+void packet_syn_set_is_upload(packet_t *packet)
+{
+  if(packet->packet_type != PACKET_TYPE_SYN)
+  {
+    LOG_FATAL("Attempted to set the 'is_command' field of a non-SYN message\n");
+    exit(1);
+  }
+
+  /* Just set the field, we don't need anything else. */
+  packet->body.syn.options |= OPT_UPLOADER;
+}
 packet_t *packet_create_msg(uint16_t session_id, uint16_t seq, uint16_t ack, uint8_t *data, size_t data_length)
 {
   packet_t *packet = (packet_t*) safe_malloc(sizeof(packet_t));
@@ -173,6 +184,7 @@ packet_t *packet_create_msg(uint16_t session_id, uint16_t seq, uint16_t ack, uin
 
   return packet;
 }
+
 
 packet_t *packet_create_fin(uint16_t session_id, char *reason)
 {
@@ -252,6 +264,7 @@ size_t packet_get_msg_size(options_t options)
 
   return size;
 }
+
 
 size_t packet_get_ping_size()
 {

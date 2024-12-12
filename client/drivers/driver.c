@@ -16,11 +16,13 @@
 #include "libs/log.h"
 #include "libs/memory.h"
 #include "driver_console.h"
+#include "driver_upload.h"
 
 #include "driver.h"
 
 driver_t *driver_create(driver_type_t type, void *real_driver)
 {
+
   driver_t *driver = (driver_t *)safe_malloc(sizeof(driver_t));
   driver->type = type;
 
@@ -40,6 +42,10 @@ driver_t *driver_create(driver_type_t type, void *real_driver)
 
     case DRIVER_TYPE_PING:
       driver->real_driver.ping = (driver_ping_t*) real_driver;
+      break;
+
+    case DRIVER_TYPE_UPLOAD:
+      driver->real_driver.upload = (driver_upload_t*) real_driver;
       break;
 
     default:
@@ -71,6 +77,10 @@ void driver_destroy(driver_t *driver)
       driver_ping_destroy(driver->real_driver.ping);
       break;
 
+    case DRIVER_TYPE_UPLOAD:
+      driver_upload_destroy(driver->real_driver.upload);
+      break;
+
     default:
       LOG_FATAL("UNKNOWN DRIVER TYPE! (%d in driver_destroy)\n", driver->type);
       exit(1);
@@ -100,6 +110,10 @@ void driver_close(driver_t *driver)
       driver_ping_close(driver->real_driver.ping);
       break;
 
+    case DRIVER_TYPE_UPLOAD:
+      driver_upload_close(driver->real_driver.upload);
+      break;
+
     default:
       LOG_FATAL("UNKNOWN DRIVER TYPE! (%d in driver_close)\n", driver->type);
       exit(1);
@@ -127,6 +141,10 @@ void driver_data_received(driver_t *driver, uint8_t *data, size_t length)
       driver_ping_data_received(driver->real_driver.ping, data, length);
       break;
 
+    case DRIVER_TYPE_UPLOAD:
+      driver_upload_data_received(driver->real_driver.upload, data, length);
+      break;
+
     default:
       LOG_FATAL("UNKNOWN DRIVER TYPE! (%d in driver_data_received)\n", driver->type);
       exit(1);
@@ -152,6 +170,10 @@ uint8_t *driver_get_outgoing(driver_t *driver, size_t *length, size_t max_length
 
     case DRIVER_TYPE_PING:
       return driver_ping_get_outgoing(driver->real_driver.ping, length, max_length);
+      break;
+
+    case DRIVER_TYPE_UPLOAD:
+      return driver_upload_get_outgoing(driver->real_driver.upload, length, max_length);
       break;
 
     default:

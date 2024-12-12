@@ -30,6 +30,7 @@ class Packet
   MESSAGE_TYPE_FIN        = 0x02
   MESSAGE_TYPE_PING       = 0xFF
   MESSAGE_TYPE_ENC        = 0x03
+  # MESSAGE_TYPE_FILE        = 0x04
 
   OPT_NAME                = 0x0001
   # OPT_TUNNEL              = 0x0002 # Deprecated
@@ -37,6 +38,7 @@ class Packet
   # OPT_DOWNLOAD            = 0x0008 # Deprecated
   # OPT_CHUNKED_DOWNLOAD    = 0x0010 # Deprecated
   OPT_COMMAND             = 0x0020
+  OPT_UPLOADER             = 0x0030
 
   attr_reader :packet_id, :type, :session_id, :body
 

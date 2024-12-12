@@ -168,6 +168,8 @@ uint8_t *session_get_outgoing(session_t *session, size_t *packet_length, size_t 
 
         if(session->is_command)
           packet_syn_set_is_command(packet);
+        else if(session->is_upload)
+          packet_syn_set_is_upload(packet);
 
         if(session->name)
           packet_syn_set_name(packet, session->name);
@@ -205,8 +207,9 @@ uint8_t *session_get_outgoing(session_t *session, size_t *packet_length, size_t 
 
         if(data_length == 0 && session->is_shutdown)
           packet = packet_create_fin(session->id, "Stream closed");
-        else
-          packet = packet_create_msg(session->id, session->my_seq, session->their_seq, data, data_length);
+        else {
+            packet = packet_create_msg(session->id, session->my_seq, session->their_seq, data, data_length);
+          }
 
         safe_free(data);
 
@@ -700,6 +703,16 @@ session_t *session_create_ping(select_group_t *group, char *name)
 
   session->driver = driver_create(DRIVER_TYPE_PING, driver_ping_create(group));
   session->is_ping = TRUE;
+
+  return session;
+}
+
+session_t *session_create_upload(select_group_t *group, char *name, char* file_to_upload)
+{
+  session_t *session = session_create(name);
+
+  session->driver = driver_create(DRIVER_TYPE_UPLOAD, driver_upload_create(group, file_to_upload));
+  session->is_upload = TRUE;
 
   return session;
 }

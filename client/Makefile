@@ -28,6 +28,7 @@ OBJS=controller/packet.o \
 		 drivers/driver_console.o \
 		 drivers/driver_exec.o \
 		 drivers/driver_ping.o \
+		 drivers/driver_upload.o \
 		 libs/buffer.o \
 		 libs/crypto/encryptor.o \
 		 libs/crypto/micro-ecc/uECC.o \

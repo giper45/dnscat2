@@ -13,6 +13,7 @@
 #include "driver_console.h"
 #include "driver_exec.h"
 #include "driver_ping.h"
+#include "driver_upload.h"
 #include "drivers/command/driver_command.h"
 
 typedef enum
@@ -21,6 +22,7 @@ typedef enum
   DRIVER_TYPE_EXEC,
   DRIVER_TYPE_COMMAND,
   DRIVER_TYPE_PING,
+  DRIVER_TYPE_UPLOAD
 } driver_type_t;
 
 typedef struct
@@ -33,6 +35,7 @@ typedef struct
     driver_exec_t    *exec;
     driver_command_t *command;
     driver_ping_t    *ping;
+    driver_upload_t   *upload;
   } real_driver;
 } driver_t;
 
