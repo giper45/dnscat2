@@ -54,6 +54,8 @@ typedef struct
 
   NBBOOL         is_ping;
 
+  NBBOOL         is_upload;
+
   driver_t       *driver;
 
   buffer_t       *outgoing_buffer;
@@ -71,6 +73,7 @@ session_t *session_create_console(select_group_t *group, char *name);
 session_t *session_create_exec(select_group_t *group, char *name, char *process);
 session_t *session_create_command(select_group_t *group, char *name);
 session_t *session_create_ping(select_group_t *group, char *name);
+session_t *session_create_upload(select_group_t *group, char *name, char *file_to_upload);
 
 void debug_set_isn(uint16_t value);
 

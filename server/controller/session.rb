@@ -11,6 +11,7 @@ require 'controller/encryptor'
 require 'controller/packet'
 require 'drivers/driver_command'
 require 'drivers/driver_console'
+require 'drivers/driver_uploader'
 require 'drivers/driver_process'
 require 'libs/commander'
 require 'libs/dnscat_exception'
@@ -37,6 +38,7 @@ class Session
   HANDLERS = {
     Packet::MESSAGE_TYPE_SYN => :_handle_syn,
     Packet::MESSAGE_TYPE_MSG => :_handle_msg,
+    # Packet::MESSAGE_TYPE_FILE => :_handle_file,
     Packet::MESSAGE_TYPE_FIN => :_handle_fin,
     Packet::MESSAGE_TYPE_ENC => :_handle_enc,
   }
@@ -160,7 +162,10 @@ class Session
     @options   = packet.body.options
 
     # TODO: We're going to need different driver types
-    if((@options & Packet::OPT_COMMAND) == Packet::OPT_COMMAND)
+    if((@options & Packet::OPT_UPLOADER) == Packet::OPT_UPLOADER)
+      puts "It is a driver uploader!"
+      @driver = DriverUploader.new(@window, @settings)
+    elsif((@options & Packet::OPT_COMMAND) == Packet::OPT_COMMAND)
       @driver = DriverCommand.new(@window, @settings)
     else
       process = @settings.get("process")
@@ -201,6 +206,27 @@ class Session
   def _actual_msg_max_length(max_data_length)
     return max_data_length - (Packet.header_size(@options) + Packet::MsgBody.header_size(@options))
   end
+
+  # def _handle_file(packet, max_length)
+  #   if(@state != STATE_ESTABLISHED)
+  #     raise(DnscatException, "MSG received in invalid state!")
+  #   end
+
+  #   print "Handle file"
+  #   # Read the next piece of data
+  #   new_data = _next_outgoing(_actual_msg_max_length(max_length))
+
+  #   # Create a packet out of it
+  #   packet = Packet.create_msg(@options, {
+  #     :session_id => @id,
+  #     :data       => new_data,
+  #     :seq        => @my_seq,
+  #     :ack        => @their_seq,
+  #   })
+  #   puts new_data.to_s  
+
+  #   return packet
+  # end
 
   def _handle_msg(packet, max_length)
     if(@state != STATE_ESTABLISHED)

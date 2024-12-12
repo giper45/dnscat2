@@ -176,7 +176,8 @@ uint8_t *controller_get_outgoing(size_t *length, size_t max_length)
     return NULL;
   }
 
-  return session_get_outgoing(session, length, max_length);
+  uint8_t* data = session_get_outgoing(session, length, max_length);
+  return data;
 }
 
 static void kill_ignored_sessions()

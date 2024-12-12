@@ -234,6 +234,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\drivers\driver_upload.c"
+				>
+			</File>
+			<File
 				RelativePath="..\libs\crypto\encryptor.c"
 				>
 			</File>
@@ -357,6 +361,10 @@
 			</File>
 			<File
 				RelativePath="..\drivers\driver_ping.h"
+				>
+			</File>
+			<File
+				RelativePath="..\drivers\driver_upload.h"
 				>
 			</File>
 			<File

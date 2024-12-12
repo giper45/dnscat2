@@ -59,6 +59,7 @@ typedef enum
   /* OPT_DOWNLOAD = 8, // Deprecated */
   /* OPT_CHUNKED_DOWNLOAD = 16, // Deprecated */
   OPT_COMMAND          = 0x0020,
+  OPT_UPLOADER          = 0x0030,
 } options_t;
 
 typedef struct
@@ -136,6 +137,9 @@ void packet_syn_set_name(packet_t *packet, char *name);
 
 /* Set the OPT_COMMAND flag */
 void packet_syn_set_is_command(packet_t *packet);
+
+/* Set the OPT_COMMAND flag */
+void packet_syn_set_is_upload(packet_t *packet);
 
 #ifndef NO_ENCRYPTION
 /* Set up an encrypted session. */

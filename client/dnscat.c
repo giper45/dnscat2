@@ -45,6 +45,8 @@ select_group_t *group         = NULL;
 driver_dns_t   *tunnel_driver = NULL;
 char           *system_dns    = NULL;
 
+char           *file_to_upload = NULL;
+
 typedef struct
 {
   char *process;
@@ -79,6 +81,14 @@ static make_driver_t *make_ping()
 {
   make_driver_t *make_driver = (make_driver_t*) safe_malloc(sizeof(make_driver_t));
   make_driver->type = DRIVER_TYPE_PING;
+
+  return make_driver;
+}
+
+static make_driver_t *make_upload()
+{
+  make_driver_t *make_driver = (make_driver_t*) safe_malloc(sizeof(make_driver_t));
+  make_driver->type = DRIVER_TYPE_UPLOAD;
 
   return make_driver;
 }
@@ -120,6 +130,11 @@ static int create_drivers(ll_t *drivers)
       case DRIVER_TYPE_PING:
         printf("Creating a ping session!\n");
         controller_add_session(session_create_ping(group, "ping"));
+        break;
+
+      case DRIVER_TYPE_UPLOAD:
+        printf("Creating an upload session!\n");
+        controller_add_session(session_create_upload(group, "upload", file_to_upload));
         break;
     }
     safe_free(this_driver);
@@ -203,6 +218,7 @@ void usage(char *name, char *message)
 "                         a new stream\n"*/
 " --command               Start an interactive 'command' session (default).\n"
 " --ping                  Simply check if there's a dnscat2 server listening.\n"
+" --upload                Upload a file to the dnscat2 server.\n"
 "\n"
 "Debug options:\n"
 " -d                      Display more debug info (can be used multiple times).\n"
@@ -384,6 +400,7 @@ int main(int argc, char *argv[])
     {"e",       required_argument, 0, 0},
     {"command", no_argument,       0, 0}, /* Enable command (default) */
     {"ping",    no_argument,       0, 0}, /* Ping */
+    {"upload",    required_argument,       0, 0}, /* Upload */
 
     /* Tunnel drivers */
     {"dns",     required_argument, 0, 0}, /* Enable DNS */
@@ -512,6 +529,11 @@ int main(int argc, char *argv[])
 
 /*          session = session_create_ping(group, "ping");
           controller_add_session(session); */
+        }
+        else if(!strcmp(option_name, "upload"))
+        {
+          file_to_upload = optarg;
+          ll_add(drivers_to_create, ll_32(drivers_created++), make_upload());
         }
 
         /* Tunnel driver options */

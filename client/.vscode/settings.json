@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "commands_tunnel.h": "c",
+        "command_packet.h": "c",
+        "memory.h": "c",
+        "driver_command.h": "c",
+        "commands_standard.h": "c"
+    }
+}
