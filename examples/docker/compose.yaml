@@ -1,11 +1,12 @@
 services:
   dnscat-server:
-    platform: linux/amd64
+    # platform: linux/amd64
     build:
       context: ../../server
     environment:
       - DNSCAT_SECRET=dnscat2 
       - DNS_OPTS=host=0.0.0.0,port=53
+      - DNSCAT_UPLOAD_FOLDER=/app
 
     networks:
       test-network:

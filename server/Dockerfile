@@ -8,7 +8,7 @@ WORKDIR /app
 ENV DNSCAT_SECRET=""
 ENV DNS_OPTS=""
 
-RUN gem install bundler && bundle install
+RUN gem install bundler && gem install sha3 && bundle install
 RUN echo '#!/bin/sh' > run.sh && \
     echo 'ruby dnscat2.rb $( [ -n "$DNSCAT_SECRET" ] && echo --secret=$DNSCAT_SECRET ) $( [ -n "$DNS_OPTS" ] && echo --dns $DNS_OPTS )' >> run.sh && \
     chmod +x run.sh
